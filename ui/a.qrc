@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="newPrefix" >
+    <file>TabsvsSpaces.png</file>
+    <file>a.qrc</file>
+  </qresource>
+</RCC>
