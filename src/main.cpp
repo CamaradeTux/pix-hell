@@ -17,6 +17,8 @@ int main(int argc, char **argv) {
     printf("Image depth=%i\n", image->depth);
     printf("Image nChannels=%i\n", image->nChannels);
 
+    cvSmooth(image, image, CV_GAUSSIAN, 3, 0, 0);
+
     QApplication app(argc, argv);
     MyCameraWindow *mainWin = new MyCameraWindow(camera);
     mainWin->setWindowTitle("OpenCV --> QtImage");
