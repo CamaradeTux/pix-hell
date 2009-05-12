@@ -8,6 +8,15 @@
 #include "QOpenCVWidget.h"
 #include "MyCameraWindow.h"
 
+/* int type = -1, param1, param2, param3; */
+
+/*
+int type = CV_GAUSSIAN;
+int param1 = 9;
+int param2 = 9;
+int param3 = 90;
+*/
+
 int main(int argc, char **argv) {
     CvCapture * camera = cvCreateCameraCapture(0);
     assert(camera);
