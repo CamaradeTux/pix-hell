@@ -51,3 +51,9 @@ gaussian.param2 = 9;
     cvwidget->putImage(image);
 }
 
+// change le type de filtre : a lier aux checkboxes
+/* void MyCameraWindow::changeType(QMouseEvent* event) {
+*/ 
+// change le fichier a lire
+
+// change les params pour un parametre de filtre, un a la fois
