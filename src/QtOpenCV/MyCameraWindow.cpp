@@ -1,13 +1,25 @@
 
 #include "MyCameraWindow.h"
 
+typedef enum type_filtre {
+  BLUR,
+  BLUR_NS,
+  GAUSSIAN_TROIS,
+  GAUSSIAN_CINQ,
+  MEDIAN,
+  BILATERAL
+} type_filtre;
+
+typedef enum taille {
+  TROIS = 3,
+  CINQ = 5,
+  SEPT = 7,
+  NEUF = 9
+} taille;
+
 typedef struct filtre {
-    bool enabled;
-    int param1;
-    int param2; /* idem param1 à ce que dit Jonathan */
-    /* si c'est pas vrai, il faudra le frapper ! */
-    /* il dit qu'il a peur... */
-    int param3;
+  type_filtre type_du_filtre;
+  taille taille;
 } filtre;
 
 filtre blur_ns, blur, gaussian, median, bilateral;
