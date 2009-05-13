@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>546</width>
-    <height>411</height>
+    <width>540</width>
+    <height>406</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -184,7 +184,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>546</width>
+     <width>540</width>
      <height>25</height>
     </rect>
    </property>
@@ -192,19 +192,54 @@
     <property name="title" >
      <string>Fichier</string>
     </property>
-    <addaction name="actionOuvrir" />
+    <widget class="QMenu" name="menuOuvrir" >
+     <property name="title" >
+      <string>Ouvrir</string>
+     </property>
+     <addaction name="actionFichier" />
+     <addaction name="actionWebcam" />
+    </widget>
+    <addaction name="menuOuvrir" />
+    <addaction name="actionQuitter" />
    </widget>
    <addaction name="menuFichier" />
   </widget>
   <widget class="QStatusBar" name="statusbar" />
-  <action name="actionOuvrir" >
+  <action name="actionQuitter" >
    <property name="text" >
-    <string>Ouvrir</string>
+    <string>Quitter</string>
+   </property>
+  </action>
+  <action name="actionFichier" >
+   <property name="text" >
+    <string>Fichier</string>
+   </property>
+  </action>
+  <action name="actionWebcam" >
+   <property name="text" >
+    <string>Webcam</string>
    </property>
   </action>
  </widget>
  <resources>
   <include location="a.qrc" />
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionQuitter</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>272</x>
+     <y>205</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
