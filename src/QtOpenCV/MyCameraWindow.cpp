@@ -4,7 +4,9 @@
 typedef struct filtre {
     bool enabled;
     int param1;
-    int param2;
+    int param2; /* idem param1 à ce que dit Jonathan */
+    /* si c'est pas vrai, il faudra le frapper ! */
+    /* il dit qu'il a peur... */
     int param3;
 } filtre;
 
