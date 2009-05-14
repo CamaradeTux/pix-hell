@@ -57,7 +57,7 @@ class Ui_MainWindow : public QMainWindow {
     {
     if (MainWindow->objectName().isEmpty())
         MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-    MainWindow->resize(540, 406);
+    MainWindow->resize(1000,500);
     actionQuitter = new QAction(MainWindow);
     actionQuitter->setObjectName(QString::fromUtf8("actionQuitter"));
     actionFichier = new QAction(MainWindow);
@@ -71,30 +71,30 @@ class Ui_MainWindow : public QMainWindow {
     new QListWidgetItem(listWidget);
     new QListWidgetItem(listWidget);
     listWidget->setObjectName(QString::fromUtf8("listWidget"));
-    listWidget->setGeometry(QRect(220, 0, 311, 121));
+    listWidget->setGeometry(QRect(690, 0, 250, 130));
     listWidget->setDragDropMode(QAbstractItemView::InternalMove);
     cvwidget = new QOpenCVWidget(this);
     cvwidget->setObjectName(QString::fromUtf8("cvwidget"));
-    cvwidget->setGeometry(QRect(19, 13, 161, 381));
+    cvwidget->setGeometry(QRect(19, 13, 640, 480));
     label = new QLabel(centralwidget);
     label->setObjectName(QString::fromUtf8("label"));
-    label->setGeometry(QRect(230, 140, 101, 17));
+    label->setGeometry(QRect(730, 140, 101, 17));
     label_2 = new QLabel(centralwidget);
     label_2->setObjectName(QString::fromUtf8("label_2"));
-    label_2->setGeometry(QRect(250, 190, 56, 17));
+    label_2->setGeometry(QRect(750, 190, 56, 17));
     label_6 = new QLabel(centralwidget);
     label_6->setObjectName(QString::fromUtf8("label_6"));
-    label_6->setGeometry(QRect(250, 160, 56, 17));
+    label_6->setGeometry(QRect(750, 160, 56, 17));
     comboBox_4 = new QComboBox(centralwidget);
     comboBox_4->setObjectName(QString::fromUtf8("comboBox_4"));
-    comboBox_4->setGeometry(QRect(320, 150, 201, 26));
+    comboBox_4->setGeometry(QRect(820, 150, 150, 26));
     buttonBox_2 = new QDialogButtonBox(centralwidget);
     buttonBox_2->setObjectName(QString::fromUtf8("buttonBox_2"));
-    buttonBox_2->setGeometry(QRect(260, 230, 166, 32));
+    buttonBox_2->setGeometry(QRect(760, 230, 180, 32));
     buttonBox_2->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
     comboBox = new QComboBox(centralwidget);
     comboBox->setObjectName(QString::fromUtf8("comboBox"));
-    comboBox->setGeometry(QRect(320, 190, 201, 26));
+    comboBox->setGeometry(QRect(820, 190, 150, 26));
     MainWindow->setCentralWidget(centralwidget);
     menubar = new QMenuBar(MainWindow);
     menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -160,6 +160,8 @@ class Ui_MainWindow : public QMainWindow {
     void setSource(CvCapture* _source) { source = _source; return; };
 
     Ui_MainWindow(QWidget* parent);
+
+    void timerEvent(QTimerEvent*);
 
   public slots:
     void new_camera_source();

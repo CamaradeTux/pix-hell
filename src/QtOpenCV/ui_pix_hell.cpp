@@ -19,6 +19,11 @@ void Ui_MainWindow::new_file_source () {
   source = cvCreateFileCapture("/root/stream.dump");
 }
 
+void Ui_MainWindow::timerEvent(QTimerEvent*){
+  IplImage *image=cvQueryFrame(source);
+  cvwidget->putImage(image);
+}
+
 void Ui_MainWindow::new_camera_source () {
   source = cvCreateCameraCapture(0);
   return;
