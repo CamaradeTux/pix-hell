@@ -12,7 +12,8 @@ Ui::MainWindow::MainWindow(QWidget* parent) : Ui_MainWindow(parent) {
   assert(source);
   assert(cvwidget);
   IplImage* image = cvQueryFrame(source);
-  cvwidget->putImage(image);*/
+  cvwidget->putImage(image);
+  startTimer(100);*/
 }
 
 void Ui_MainWindow::new_file_source () {
