@@ -25,10 +25,11 @@
 #include <QtGui/QStatusBar>
 #include <QtGui/QWidget>
 
+#include <QTextStream>
+
 #include "QOpenCVWidget.h"
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
-
 
 class Ui_MainWindow : public QMainWindow {
   Q_OBJECT
@@ -116,6 +117,8 @@ class Ui_MainWindow : public QMainWindow {
     retranslateUi(MainWindow);
     QObject::connect(actionQuitter, SIGNAL(triggered()), MainWindow, SLOT(close()));
     QObject::connect(actionFichier, SIGNAL(triggered()), MainWindow, SLOT(new_file_source()));
+    QObject::connect(buttonBox_2, SIGNAL(accepted()), MainWindow, SLOT(apply_changes()));
+    QObject::connect(buttonBox_2, SIGNAL(rejected()), MainWindow, SLOT(discard_changes()));
 
     QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -161,8 +164,8 @@ class Ui_MainWindow : public QMainWindow {
   public slots:
     void new_camera_source();
     void new_file_source();
-    void new_filter();
     void apply_changes();
+    void discard_changes();
 
 };
 
