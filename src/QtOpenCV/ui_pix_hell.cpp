@@ -42,5 +42,11 @@ void Ui_MainWindow::apply_changes () {
 }
 
 void Ui_MainWindow::discard_changes () {
+  QListWidgetItem* current_item = listWidget->currentItem();
+  int index;
+  index = comboBox_4->findText(current_item->text().section(" ", 0, 0));
+  comboBox_4->setCurrentIndex(index);
+  index = comboBox->findText(current_item->text().section(" ", 1, 1));
+  comboBox->setCurrentIndex(index);
   return;
 }
