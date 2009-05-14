@@ -10,7 +10,7 @@ Ui::MainWindow::MainWindow(QWidget* parent) : Ui_MainWindow(parent) {
   cvwidget = new QOpenCVWidget(this);
   assert(source);
   assert(cvwidget);
-  startTimer(100);
+  startTimer(40);
 }
 
 void Ui_MainWindow::new_file_source () {
