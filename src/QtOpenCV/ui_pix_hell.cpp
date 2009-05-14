@@ -77,8 +77,11 @@ void Ui_MainWindow::apply_changes () {
   type = comboBox_4->currentText();
   param = comboBox->currentText();
 
-  if (current_text == "Nouveau")
-    listWidget->addItem(QApplication::translate("MainWindow", "Nouveau", 0, QApplication::UnicodeUTF8));
+  if (current_text == "Nouveau") {
+    QListWidgetItem* new_item = new QListWidgetItem("Nouveau");
+    listWidget->addItem(new_item);
+    listWidget->setCurrentItem(new_item);
+  }
   
   QTextStream(&new_text) << type << " " << param;
 

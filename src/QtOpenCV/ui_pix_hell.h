@@ -40,7 +40,6 @@ class Ui_MainWindow : public QMainWindow {
     QAction *actionWebcam;
     QWidget *centralwidget;
     QListWidget *listWidget;
-    QLabel *label;
     QLabel *label_2;
     QLabel *label_6;
     QComboBox *comboBox_4;
@@ -78,28 +77,25 @@ class Ui_MainWindow : public QMainWindow {
     cvwidget = new QOpenCVWidget(this);
     cvwidget->setObjectName(QString::fromUtf8("cvwidget"));
     cvwidget->setGeometry(QRect(19, 13, 640, 480));
-    label = new QLabel(centralwidget);
-    label->setObjectName(QString::fromUtf8("label"));
-    label->setGeometry(QRect(730, 140, 101, 17));
     label_2 = new QLabel(centralwidget);
     label_2->setObjectName(QString::fromUtf8("label_2"));
-    label_2->setGeometry(QRect(750, 190, 56, 17));
+    label_2->setGeometry(QRect(700, 195, 56, 17));
     label_6 = new QLabel(centralwidget);
     label_6->setObjectName(QString::fromUtf8("label_6"));
-    label_6->setGeometry(QRect(750, 160, 56, 17));
+    label_6->setGeometry(QRect(700, 156, 56, 17));
     comboBox_4 = new QComboBox(centralwidget);
     comboBox_4->setObjectName(QString::fromUtf8("comboBox_4"));
-    comboBox_4->setGeometry(QRect(820, 150, 150, 26));
+    comboBox_4->setGeometry(QRect(750, 150, 175, 26));
     buttonBox_2 = new QDialogButtonBox(centralwidget);
     buttonBox_2->setObjectName(QString::fromUtf8("buttonBox_2"));
-    buttonBox_2->setGeometry(QRect(760, 230, 180, 32));
+    buttonBox_2->setGeometry(QRect(720, 230, 180, 32));
     apply_button = new QPushButton(tr("Appliquer"));
     delete_button = new QPushButton(tr("Supprimer"));
     buttonBox_2->addButton(apply_button, QDialogButtonBox::AcceptRole);
     buttonBox_2->addButton(delete_button, QDialogButtonBox::RejectRole);
     comboBox = new QComboBox(centralwidget);
     comboBox->setObjectName(QString::fromUtf8("comboBox"));
-    comboBox->setGeometry(QRect(820, 190, 150, 26));
+    comboBox->setGeometry(QRect(750, 190, 175, 26));
     MainWindow->setCentralWidget(centralwidget);
     menubar = new QMenuBar(MainWindow);
     menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -137,10 +133,10 @@ class Ui_MainWindow : public QMainWindow {
 
     const bool __sortingEnabled = listWidget->isSortingEnabled();
     listWidget->item(0)->setText(QApplication::translate("MainWindow", "Nouveau", 0, QApplication::UnicodeUTF8));
+    listWidget->setCurrentItem(listWidget->item(0));
     listWidget->setSortingEnabled(false);
 
     listWidget->setSortingEnabled(__sortingEnabled);
-    label->setText(QApplication::translate("MainWindow", "Filtre", 0, QApplication::UnicodeUTF8));
     label_2->setText(QApplication::translate("MainWindow", "Taille", 0, QApplication::UnicodeUTF8));
     label_6->setText(QApplication::translate("MainWindow", "Type", 0, QApplication::UnicodeUTF8));
     comboBox_4->clear();
