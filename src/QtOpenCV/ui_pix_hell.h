@@ -26,6 +26,7 @@
 #include <QtGui/QWidget>
 
 #include <QTextStream>
+#include <QPushButton>
 
 #include "QOpenCVWidget.h"
 #include <opencv/cv.h>
@@ -49,6 +50,9 @@ class Ui_MainWindow : public QMainWindow {
     QMenu *menuFichier;
     QMenu *menuOuvrir;
     QStatusBar *statusbar;
+
+    QPushButton* apply_button;
+    QPushButton* delete_button;
 
     QOpenCVWidget* cvwidget;
     CvCapture* source;
@@ -89,7 +93,10 @@ class Ui_MainWindow : public QMainWindow {
     buttonBox_2 = new QDialogButtonBox(centralwidget);
     buttonBox_2->setObjectName(QString::fromUtf8("buttonBox_2"));
     buttonBox_2->setGeometry(QRect(760, 230, 180, 32));
-    buttonBox_2->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
+    apply_button = new QPushButton(tr("Appliquer"));
+    delete_button = new QPushButton(tr("Supprimer"));
+    buttonBox_2->addButton(apply_button, QDialogButtonBox::AcceptRole);
+    buttonBox_2->addButton(delete_button, QDialogButtonBox::RejectRole);
     comboBox = new QComboBox(centralwidget);
     comboBox->setObjectName(QString::fromUtf8("comboBox"));
     comboBox->setGeometry(QRect(820, 190, 150, 26));
@@ -116,7 +123,7 @@ class Ui_MainWindow : public QMainWindow {
     QObject::connect(actionQuitter, SIGNAL(triggered()), MainWindow, SLOT(close()));
     QObject::connect(actionFichier, SIGNAL(triggered()), MainWindow, SLOT(new_file_source()));
     QObject::connect(buttonBox_2, SIGNAL(accepted()), MainWindow, SLOT(apply_changes()));
-    QObject::connect(buttonBox_2, SIGNAL(rejected()), MainWindow, SLOT(discard_changes()));
+    QObject::connect(buttonBox_2, SIGNAL(rejected()), MainWindow, SLOT(delete_filter()));
 
     QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -133,7 +140,7 @@ class Ui_MainWindow : public QMainWindow {
     listWidget->setSortingEnabled(false);
 
     listWidget->setSortingEnabled(__sortingEnabled);
-    label->setText(QApplication::translate("MainWindow", "Filtre 1", 0, QApplication::UnicodeUTF8));
+    label->setText(QApplication::translate("MainWindow", "Filtre", 0, QApplication::UnicodeUTF8));
     label_2->setText(QApplication::translate("MainWindow", "Taille", 0, QApplication::UnicodeUTF8));
     label_6->setText(QApplication::translate("MainWindow", "Type", 0, QApplication::UnicodeUTF8));
     comboBox_4->clear();
@@ -166,7 +173,7 @@ class Ui_MainWindow : public QMainWindow {
     void new_camera_source();
     void new_file_source();
     void apply_changes();
-    void discard_changes();
+    void delete_filter();
 
 };
 

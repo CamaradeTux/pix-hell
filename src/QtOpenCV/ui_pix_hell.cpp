@@ -87,12 +87,10 @@ void Ui_MainWindow::apply_changes () {
   return;
 }
 
-void Ui_MainWindow::discard_changes () {
+void Ui_MainWindow::delete_filter () {
   QListWidgetItem* current_item = listWidget->currentItem();
-  int index;
-  index = comboBox_4->findText(current_item->text().section(" ", 0, 0));
-  comboBox_4->setCurrentIndex(index);
-  index = comboBox->findText(current_item->text().section(" ", 1, 1));
-  comboBox->setCurrentIndex(index);
+  if (current_item->text() != QString("Nouveau"))
+    delete current_item;
   return;
 }
+
