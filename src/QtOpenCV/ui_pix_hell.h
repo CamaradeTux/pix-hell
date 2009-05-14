@@ -140,7 +140,10 @@ class Ui_MainWindow : public QMainWindow {
     comboBox_4->insertItems(0, QStringList()
      << QApplication::translate("MainWindow", "BLUR", 0, QApplication::UnicodeUTF8)
      << QApplication::translate("MainWindow", "BLUR_NS", 0, QApplication::UnicodeUTF8)
-     << QApplication::translate("MainWindow", "GAUSSIAN", 0, QApplication::UnicodeUTF8)
+     << QApplication::translate("MainWindow", "GAUSSIAN_TROIS", 0, QApplication::UnicodeUTF8)
+     << QApplication::translate("MainWindow", "GAUSSIAN_CINQ", 0, QApplication::UnicodeUTF8)
+     << QApplication::translate("MainWindow", "MEDIAN", 0, QApplication::UnicodeUTF8)
+     << QApplication::translate("MainWindow", "BILATERAL", 0, QApplication::UnicodeUTF8)
     );
     comboBox->clear();
     comboBox->insertItems(0, QStringList()

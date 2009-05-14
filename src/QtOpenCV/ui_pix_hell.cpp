@@ -45,7 +45,7 @@ void apply_filter(IplImage* image, type_filtre filtre, int taille) {
     case MEDIAN:
       return cvSmooth(image, image, CV_MEDIAN, taille, taille, 0, 0);
     case BILATERAL:
-      return cvSmooth(image, image, CV_BILATERAL, taille, taille, 0, 0);
+      return cvSmooth(image, image, CV_BILATERAL, taille, taille, 3, 3);
   }
 }
 
