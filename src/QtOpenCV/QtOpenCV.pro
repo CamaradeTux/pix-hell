@@ -3,6 +3,7 @@ TARGET =
 DEPENDPATH += .
 INCLUDEPATH += .
 LIBS += -lcv -lhighgui
+CONFIG += debug
 
 # Input
 HEADERS += QOpenCVWidget.h ui_pix_hell.h

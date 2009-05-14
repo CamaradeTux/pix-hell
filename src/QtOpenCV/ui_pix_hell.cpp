@@ -5,19 +5,16 @@ const char* path = "/root/work/pix-hell/src/QtOpenCV/test.avi";
 Ui_MainWindow::Ui_MainWindow(QWidget* parent) : QMainWindow(parent) {}
 
 Ui::MainWindow::MainWindow(QWidget* parent) : Ui_MainWindow(parent) {
-  /*
-  source = cvCreateFileCapture(path);
+  source = cvCreateFileCapture("/root/test.avi");
   printf("chemin : %s\n", path);
   cvwidget = new QOpenCVWidget(this);
   assert(source);
   assert(cvwidget);
-  IplImage* image = cvQueryFrame(source);
-  cvwidget->putImage(image);
-  startTimer(100);*/
+  startTimer(100);
 }
 
 void Ui_MainWindow::new_file_source () {
-  source = cvCreateFileCapture("/root/stream.dump");
+  source = cvCreateFileCapture("/root/test.avi");
 }
 
 void Ui_MainWindow::timerEvent(QTimerEvent*){
