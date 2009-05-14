@@ -68,8 +68,6 @@ class Ui_MainWindow : public QMainWindow {
     centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
     listWidget = new QListWidget(centralwidget);
     new QListWidgetItem(listWidget);
-    new QListWidgetItem(listWidget);
-    new QListWidgetItem(listWidget);
     listWidget->setObjectName(QString::fromUtf8("listWidget"));
     listWidget->setGeometry(QRect(690, 0, 250, 130));
     listWidget->setDragDropMode(QAbstractItemView::InternalMove);
@@ -131,10 +129,8 @@ class Ui_MainWindow : public QMainWindow {
     actionWebcam->setText(QApplication::translate("MainWindow", "Webcam", 0, QApplication::UnicodeUTF8));
 
     const bool __sortingEnabled = listWidget->isSortingEnabled();
+    listWidget->item(0)->setText(QApplication::translate("MainWindow", "Nouveau", 0, QApplication::UnicodeUTF8));
     listWidget->setSortingEnabled(false);
-    listWidget->item(0)->setText(QApplication::translate("MainWindow", "Filtre 1 (param1, param2, param3)", 0, QApplication::UnicodeUTF8));
-    listWidget->item(1)->setText(QApplication::translate("MainWindow", "Filtre 2", 0, QApplication::UnicodeUTF8));
-    listWidget->item(2)->setText(QApplication::translate("MainWindow", "Nouveau", 0, QApplication::UnicodeUTF8));
 
     listWidget->setSortingEnabled(__sortingEnabled);
     label->setText(QApplication::translate("MainWindow", "Filtre 1", 0, QApplication::UnicodeUTF8));
@@ -188,12 +184,12 @@ typedef enum type_filtre {
   BILATERAL
 } type_filtre;
 
-typedef enum taille_ {
+typedef enum taille {
   TROIS = 3,
   CINQ = 5,
   SEPT = 7,
   NEUF = 9
-} taille;
+} taille_;
 
 typedef struct filtre {
   type_filtre type_du_filtre;
