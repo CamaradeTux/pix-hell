@@ -1,17 +1,7 @@
 Utiliser la barre d'êtat pour indiquer l'utilisation du processeur ainsi que le nombre d'images traitées par seconde.
 
+Boutons pause et stop.
 
-Lire un fichier
+xneko ; musique ?
 
-Afficher
-
-Appliquer les filtres
-
-Afficher
-
-
-Ensuite :
-
-Lire la webcam
-
-Interface plus poussée
+Proposer 0, 1, ... pour les sources vidéso (/dev/videoX)
