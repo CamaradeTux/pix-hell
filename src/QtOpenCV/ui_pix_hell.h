@@ -27,9 +27,11 @@
 
 #include <QTextStream>
 #include <QPushButton>
+#include <QFileDialog>
 
 #include "QOpenCVWidget.h"
 #include <opencv/cv.h>
+#include <opencv/cxcore.h>
 #include <opencv/highgui.h>
 
 class Ui_MainWindow : public QMainWindow {
@@ -117,9 +119,10 @@ class Ui_MainWindow : public QMainWindow {
 
     retranslateUi(MainWindow);
     QObject::connect(actionQuitter, SIGNAL(triggered()), MainWindow, SLOT(close()));
-    QObject::connect(actionFichier, SIGNAL(triggered()), MainWindow, SLOT(new_file_source()));
+    QObject::connect(actionFichier, SIGNAL(triggered()), MainWindow, SLOT(select_file()));
     QObject::connect(buttonBox_2, SIGNAL(accepted()), MainWindow, SLOT(apply_changes()));
     QObject::connect(buttonBox_2, SIGNAL(rejected()), MainWindow, SLOT(delete_filter()));
+    QObject::connect(actionWebcam, SIGNAL(triggered()), MainWindow, SLOT(select_camera()));
 
     QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -165,9 +168,11 @@ class Ui_MainWindow : public QMainWindow {
 
     void timerEvent(QTimerEvent*);
 
+    int timer_id;
+
   public slots:
-    void new_camera_source();
-    void new_file_source();
+    void select_camera();
+    void select_file();
     void apply_changes();
     void delete_filter();
 
