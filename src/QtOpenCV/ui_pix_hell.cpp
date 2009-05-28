@@ -41,22 +41,33 @@ type_filtre filter_of_id(QString name) {
     return BILATERAL;
 }
 
-void apply_filter(IplImage* image, IplImage* dest, type_filtre filtre, int taille) {
+IplImage* Ui_MainWindow::apply_filter(IplImage* image, type_filtre filtre, int taille) {
+  IplImage* dest;
   switch(filtre) {
     case BLUR:
-      return cvSmooth(image, dest, CV_BLUR, taille, taille, 0, 0);
+      cvSmooth(image, image, CV_BLUR, taille, taille, 0, 0);
+      return image;
     case BLUR_NS:
-      return cvSmooth(image, dest, CV_BLUR, taille, taille, 0, 0);
+      cvSmooth(image, image, CV_BLUR, taille, taille, 0, 0);
+      return image;
     case GAUSSIAN_TROIS:
-      return cvSmooth(image, dest, CV_GAUSSIAN, taille, taille, 3, 0);
+      cvSmooth(image, image, CV_GAUSSIAN, taille, taille, 3, 0);
+      return image;
     case GAUSSIAN_CINQ:
-      return cvSmooth(image, dest, CV_GAUSSIAN, taille, taille, 5, 0);
+      cvSmooth(image, image, CV_GAUSSIAN, taille, taille, 5, 0);
+      return image;
     case MEDIAN:
-      return cvSmooth(image, dest, CV_MEDIAN, taille, taille, 0, 0);
+      dest = cvCreateImage(cvSize(width, height), depth, channels);
+      cvSmooth(image, dest, CV_MEDIAN, taille, taille, 0, 0);
+      cvReleaseImageHeader(&image);
+      return dest;
     case BILATERAL:
-      return cvSmooth(image, dest, CV_BILATERAL, taille, taille, 3, 3);
+      dest = cvCreateImage(cvSize(width, height), depth, channels);
+      cvSmooth(image, dest, CV_BILATERAL, taille, taille, 3, 3);
+      cvReleaseImageHeader(&image);
+      return dest;
   }
-  return;
+  return NULL;
 }
 
 void Ui_MainWindow::timerEvent(QTimerEvent*){
@@ -65,29 +76,31 @@ void Ui_MainWindow::timerEvent(QTimerEvent*){
   QListWidgetItem* item_i;
   count = listWidget->count();
   IplImage* image = cvQueryFrame(source);
-  int width = image->width;
-  int height = image->height;
-  int channels = image->nChannels;
-  int depth = image->depth;
-  IplImage* dest;
-  cvwidget->setGeometry(QRect(19, 13, width, height));
-  resize(360+width, 20+height);
-  listWidget->setGeometry(QRect(50+width, 0, 250, 130));
-  label_2->setGeometry(QRect(60+width, 195, 56, 17));
-  label_6->setGeometry(QRect(60+width, 156, 56, 17));
-  comboBox_4->setGeometry(QRect(110+width, 150, 175, 26));
-  buttonBox_2->setGeometry(QRect(80+width, 230, 180, 32));
-  comboBox->setGeometry(QRect(110+width, 190, 175, 26));
-  menubar->setGeometry(QRect(0, 0, 360+width, 25));
+  if (image->width != width
+      || image-> height != height 
+      || image->nChannels != channels
+      || image->depth != depth ) {
+    width = image->width;
+    height = image->height;
+    channels = image->nChannels;
+    depth = image->depth;
+    cvwidget->setGeometry(QRect(19, 13, width, height));
+    resize(360+width, 20+height);
+    listWidget->setGeometry(QRect(50+width, 0, 250, 130));
+    label_2->setGeometry(QRect(60+width, 195, 56, 17));
+    label_6->setGeometry(QRect(60+width, 156, 56, 17));
+    comboBox_4->setGeometry(QRect(110+width, 150, 175, 26));
+    buttonBox_2->setGeometry(QRect(80+width, 230, 180, 32));
+    comboBox->setGeometry(QRect(110+width, 190, 175, 26));
+    menubar->setGeometry(QRect(0, 0, 360+width, 25));
+  }
 
   for(i = 0; i < count - 1; i++) {
     item_i = listWidget->item(i);
     type = item_i->text().section(" ", 0, 0);
     param = item_i->text().section(" ", 1, 1);
     taille = param.at(0).digitValue();
-    dest = cvCreateImage(cvSize(width, height), depth, channels);
-    apply_filter(image, dest, filter_of_id(type), taille);
-    image = dest;
+    image = apply_filter(image, filter_of_id(type), taille);
   }
   cvwidget->putImage(image);
   return;

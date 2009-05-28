@@ -34,6 +34,28 @@
 #include <opencv/cxcore.h>
 #include <opencv/highgui.h>
 
+
+typedef enum type_filtre {
+  BLUR,
+  BLUR_NS,
+  GAUSSIAN_TROIS,
+  GAUSSIAN_CINQ,
+  MEDIAN,
+  BILATERAL
+} type_filtre;
+
+typedef enum taille {
+  TROIS = 3,
+  CINQ = 5,
+  SEPT = 7,
+  NEUF = 9
+} taille_;
+
+typedef struct filtre {
+  type_filtre type_du_filtre;
+  taille_ taille;
+} filtre;
+
 class Ui_MainWindow : public QMainWindow {
   Q_OBJECT
   public:
@@ -167,8 +189,13 @@ class Ui_MainWindow : public QMainWindow {
     Ui_MainWindow(QWidget* parent);
 
     void timerEvent(QTimerEvent*);
+    IplImage* apply_filter(IplImage*, type_filtre, int);
 
     int timer_id;
+    int width;
+    int height;
+    int depth;
+    int channels;
 
   public slots:
     void select_camera();
@@ -184,27 +211,5 @@ namespace Ui {
         MainWindow(QWidget* parent);
     };
 } // namespace Ui
-
-
-typedef enum type_filtre {
-  BLUR,
-  BLUR_NS,
-  GAUSSIAN_TROIS,
-  GAUSSIAN_CINQ,
-  MEDIAN,
-  BILATERAL
-} type_filtre;
-
-typedef enum taille {
-  TROIS = 3,
-  CINQ = 5,
-  SEPT = 7,
-  NEUF = 9
-} taille_;
-
-typedef struct filtre {
-  type_filtre type_du_filtre;
-  taille_ taille;
-} filtre;
 
 #endif // PIX_HELLMN1970_H
