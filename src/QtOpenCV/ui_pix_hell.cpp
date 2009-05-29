@@ -59,7 +59,6 @@ IplImage* Ui_MainWindow::apply_filter(IplImage* image, type_filtre filtre, int t
     case MEDIAN:
       dest = cvCreateImage(cvSize(width, height), depth, channels);
       cvSmooth(image, dest, CV_MEDIAN, taille, taille, 0, 0);
-      cvReleaseImageHeader(&image);
       return dest;
     case BILATERAL:
       dest = cvCreateImage(cvSize(width, height), depth, channels);
@@ -103,6 +102,7 @@ void Ui_MainWindow::timerEvent(QTimerEvent*){
     image = apply_filter(image, filter_of_id(type), taille);
   }
   cvwidget->putImage(image);
+  cvReleaseImage(&image);
   return;
 }
 
