@@ -71,6 +71,10 @@ IplImage* Ui_MainWindow::apply_filter(IplImage* image, type_filtre filtre, int t
 
 void Ui_MainWindow::timerEvent(QTimerEvent*){
   int i, count, taille;
+  /* THAT SUCKS ! But I don't get how opencv manages memory */
+  bool should_free = false;
+  /* END OF MAJOR SUCKINESS */
+  type_filtre filter;
   QString type, param;
   QListWidgetItem* item_i;
   count = listWidget->count();
@@ -97,12 +101,16 @@ void Ui_MainWindow::timerEvent(QTimerEvent*){
   for(i = 0; i < count - 1; i++) {
     item_i = listWidget->item(i);
     type = item_i->text().section(" ", 0, 0);
+    filter = filter_of_id(type);
+    if (MEDIAN == filter || BILATERAL == filter)
+      should_free = true;
     param = item_i->text().section(" ", 1, 1);
     taille = param.at(0).digitValue();
     image = apply_filter(image, filter_of_id(type), taille);
   }
   cvwidget->putImage(image);
-  cvReleaseImage(&image);
+  if (should_free)
+    cvReleaseImage(&image);
   return;
 }
 
