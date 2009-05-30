@@ -100,13 +100,15 @@ void Ui_MainWindow::timerEvent(QTimerEvent*){
 
   for(i = 0; i < count - 1; i++) {
     item_i = listWidget->item(i);
-    type = item_i->text().section(" ", 0, 0);
-    filter = filter_of_id(type);
-    if (MEDIAN == filter || BILATERAL == filter)
-      should_free = true;
-    param = item_i->text().section(" ", 1, 1);
-    taille = param.at(0).digitValue();
-    image = apply_filter(image, filter_of_id(type), taille);
+    if (item_i->text() != "Nouveau") {
+      type = item_i->text().section(" ", 0, 0);
+      filter = filter_of_id(type);
+      if (MEDIAN == filter || BILATERAL == filter)
+        should_free = true;
+      param = item_i->text().section(" ", 1, 1);
+      taille = param.at(0).digitValue();
+      image = apply_filter(image, filter_of_id(type), taille);
+    }
   }
   cvwidget->putImage(image);
   if (should_free)
