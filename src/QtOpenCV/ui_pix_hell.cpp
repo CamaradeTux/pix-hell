@@ -98,7 +98,7 @@ void Ui_MainWindow::timerEvent(QTimerEvent*){
     menubar->setGeometry(QRect(0, 0, 360+width, 25));
   }
 
-  for(i = 0; i < count - 1; i++) {
+  for(i = 0; i < count; i++) {
     item_i = listWidget->item(i);
     if (item_i->text() != "Nouveau") {
       type = item_i->text().section(" ", 0, 0);
