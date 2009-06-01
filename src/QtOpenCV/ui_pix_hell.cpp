@@ -3,7 +3,7 @@
 Ui_MainWindow::Ui_MainWindow(QWidget* parent) : QMainWindow(parent) {}
 
 Ui::MainWindow::MainWindow(QWidget* parent) : Ui_MainWindow(parent) {
-  cvwidget = new QOpenCVWidget(this);
+
 }
 
 void Ui_MainWindow::select_file(){
