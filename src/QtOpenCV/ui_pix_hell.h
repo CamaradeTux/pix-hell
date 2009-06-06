@@ -83,8 +83,6 @@ class Ui_MainWindow : public QMainWindow {
     void setupUi(QMainWindow* MainWindow);
     void retranslateUi(QMainWindow* MainWindow);
    
-    void setSource(CvCapture* _source) { source = _source; return; };
-
     Ui_MainWindow(QWidget* parent);
 
     void timerEvent(QTimerEvent*);
