@@ -6,9 +6,10 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include "QOpenCVWidget.h"
-#include "MyCameraWindow.h"
+#include "ui_pix_hell.h"
 
 int main(int argc, char **argv) {
+  /*
     CvCapture * camera = cvCreateCameraCapture(0);
     assert(camera);
     IplImage * image=cvQueryFrame(camera);
@@ -16,16 +17,15 @@ int main(int argc, char **argv) {
 
     printf("Image depth=%i\n", image->depth);
     printf("Image nChannels=%i\n", image->nChannels);
-
-    cvSmooth(image, image, CV_GAUSSIAN, 3, 0, 0);
-
+*/
     QApplication app(argc, argv);
-    MyCameraWindow *mainWin = new MyCameraWindow(camera);
-    mainWin->setWindowTitle("OpenCV --> QtImage");
-    mainWin->show();    
+    Ui::MainWindow* window = new Ui::MainWindow(0);
+    window->setupUi(window);
+    window->setWindowTitle("OpenCV --> QtImage");
+    window->show();
     int retval = app.exec();
     
-    cvReleaseCapture(&camera);
+    //cvReleaseCapture(&camera);
     
     return retval;
 }
