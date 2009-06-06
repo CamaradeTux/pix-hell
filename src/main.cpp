@@ -9,24 +9,13 @@
 #include "ui_pix_hell.h"
 
 int main(int argc, char **argv) {
-  /*
-    CvCapture * camera = cvCreateCameraCapture(0);
-    assert(camera);
-    IplImage * image=cvQueryFrame(camera);
-    assert(image);
-
-    printf("Image depth=%i\n", image->depth);
-    printf("Image nChannels=%i\n", image->nChannels);
-*/
-    QApplication app(argc, argv);
-    Ui::MainWindow* window = new Ui::MainWindow(0);
-    window->setupUi(window);
-    window->setWindowTitle("OpenCV --> QtImage");
-    window->show();
-    int retval = app.exec();
-    
-    //cvReleaseCapture(&camera);
-    
-    return retval;
+  int retval;
+  QApplication app(argc, argv);
+  Ui::MainWindow* window = new Ui::MainWindow(0);
+  window->setupUi(window);
+  window->setWindowTitle("OpenCV --> QtImage");
+  window->show();
+  retval = app.exec();
+  return retval;
 }
 
