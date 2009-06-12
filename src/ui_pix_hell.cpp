@@ -160,15 +160,10 @@ void Ui_MainWindow::stop_playback() {
 
 /** Met à jour les infos sur l'image : width, height, channels, depth */
 void Ui_MainWindow::update_image_infos() {
-  if (current_image->width != width
-      || current_image-> height != height 
-      || current_image->nChannels != channels
-      || current_image->depth != depth ) {
-    width = current_image->width;
-    height = current_image->height;
-    channels = current_image->nChannels;
-    depth = current_image->depth;
-  }
+  width = current_image->width;
+  height = current_image->height;
+  channels = current_image->nChannels;
+  depth = current_image->depth;
 }
 
 /** Affiche l'image de Darth Vador */
