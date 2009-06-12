@@ -1,6 +1,8 @@
 #include "ui_pix_hell.h"
 
-Ui_MainWindow::Ui_MainWindow(QWidget* parent) : QMainWindow(parent) {}
+Ui_MainWindow::Ui_MainWindow(QWidget* parent) : QMainWindow(parent) {
+  default_image_path = "star-wars-darth-vader-sense.jpg";
+}
 
 Ui::MainWindow::MainWindow(QWidget* parent) : Ui_MainWindow(parent) {}
 
@@ -67,8 +69,8 @@ IplImage* Ui_MainWindow::apply_filter(IplImage* image, type_filtre filtre, int t
 }
 
 void Ui_MainWindow::fit_window() {
-  resize(360+width, 20+height);
-  cvwidget->setGeometry(QRect(19, 13, width, height));
+  resize(360+width, 44+height);
+  cvwidget->setGeometry(QRect(21, 17, 21+width, 18+height));
   listWidget->setGeometry(QRect(50+width, 0, 250, 130));
   label_2->setGeometry(QRect(60+width, 195, 56, 17));
   label_6->setGeometry(QRect(60+width, 156, 56, 17));
@@ -87,21 +89,14 @@ void Ui_MainWindow::timerEvent(QTimerEvent*){
   QString type, param;
   QListWidgetItem* item_i;
   count = listWidget->count();
-  IplImage* image = cvQueryFrame(source);
-  if (!image) {
+  current_image = cvQueryFrame(source);
+  if (!current_image) {
     stop_playback();
     return;
   }
-  if (image->width != width
-      || image-> height != height 
-      || image->nChannels != channels
-      || image->depth != depth ) {
-    width = image->width;
-    height = image->height;
-    channels = image->nChannels;
-    depth = image->depth;
-    fit_window();
-  }
+
+  update_image_infos();
+  fit_window();
 
   for(i = 0; i < count; i++) {
     item_i = listWidget->item(i);
@@ -112,12 +107,12 @@ void Ui_MainWindow::timerEvent(QTimerEvent*){
         should_free = true;
       param = item_i->text().section(" ", 1, 1);
       taille = param.at(0).digitValue();
-      image = apply_filter(image, filter_of_id(type), taille);
+      current_image = apply_filter(current_image, filter_of_id(type), taille);
     }
   }
-  cvwidget->putImage(image);
+  cvwidget->putImage(current_image);
   if (should_free)
-    cvReleaseImage(&image);
+    cvReleaseImage(&current_image);
   return;
 }
 
@@ -151,6 +146,27 @@ void Ui_MainWindow::delete_filter () {
 void Ui_MainWindow::stop_playback() {
   killTimer(timer_id);
   cvReleaseCapture(&source);
+  may_the_force_be_with_you();
+}
+
+void Ui_MainWindow::update_image_infos() {
+  if (current_image->width != width
+      || current_image-> height != height 
+      || current_image->nChannels != channels
+      || current_image->depth != depth ) {
+    width = current_image->width;
+    height = current_image->height;
+    channels = current_image->nChannels;
+    depth = current_image->depth;
+  }
+}
+
+void Ui_MainWindow::may_the_force_be_with_you() {
+  current_image = cvLoadImage(default_image_path);
+  update_image_infos();
+  fit_window();
+  cvwidget->putImage(current_image);
+  fit_window();
 }
 
 void Ui_MainWindow::setupUi(QMainWindow *MainWindow) {
@@ -203,9 +219,7 @@ void Ui_MainWindow::setupUi(QMainWindow *MainWindow) {
   menuOuvrir->addAction(actionFichier);
   menuOuvrir->addAction(actionWebcam);
 
-  width = 200;
-  height = 300;
-  fit_window();
+  may_the_force_be_with_you();
 
   retranslateUi(MainWindow);
   QObject::connect(actionQuitter, SIGNAL(triggered()), MainWindow, SLOT(close()));
