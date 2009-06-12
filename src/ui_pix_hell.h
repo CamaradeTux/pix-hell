@@ -80,6 +80,9 @@ class Ui_MainWindow : public QMainWindow {
     QOpenCVWidget* cvwidget;
     CvCapture* source;
 
+    const char* default_image_path;
+
+    void fit_window();
     void setupUi(QMainWindow* MainWindow);
     void retranslateUi(QMainWindow* MainWindow);
    

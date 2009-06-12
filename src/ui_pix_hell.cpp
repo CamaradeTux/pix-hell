@@ -2,9 +2,7 @@
 
 Ui_MainWindow::Ui_MainWindow(QWidget* parent) : QMainWindow(parent) {}
 
-Ui::MainWindow::MainWindow(QWidget* parent) : Ui_MainWindow(parent) {
-
-}
+Ui::MainWindow::MainWindow(QWidget* parent) : Ui_MainWindow(parent) {}
 
 void Ui_MainWindow::select_file(){
   QString filename = QFileDialog::getOpenFileName(this,tr("OpenImage"), "/home");
@@ -68,6 +66,18 @@ IplImage* Ui_MainWindow::apply_filter(IplImage* image, type_filtre filtre, int t
   return NULL;
 }
 
+void Ui_MainWindow::fit_window() {
+  resize(360+width, 20+height);
+  cvwidget->setGeometry(QRect(19, 13, width, height));
+  listWidget->setGeometry(QRect(50+width, 0, 250, 130));
+  label_2->setGeometry(QRect(60+width, 195, 56, 17));
+  label_6->setGeometry(QRect(60+width, 156, 56, 17));
+  comboBox_4->setGeometry(QRect(110+width, 150, 175, 26));
+  buttonBox_2->setGeometry(QRect(80+width, 230, 180, 32));
+  comboBox->setGeometry(QRect(110+width, 190, 175, 26));
+  menubar->setGeometry(QRect(0, 0, 360+width, 25));
+}
+
 void Ui_MainWindow::timerEvent(QTimerEvent*){
   int i, count, taille;
   /* THAT SUCKS ! But I don't get how opencv manages memory */
@@ -90,15 +100,7 @@ void Ui_MainWindow::timerEvent(QTimerEvent*){
     height = image->height;
     channels = image->nChannels;
     depth = image->depth;
-    cvwidget->setGeometry(QRect(19, 13, width, height));
-    resize(360+width, 20+height);
-    listWidget->setGeometry(QRect(50+width, 0, 250, 130));
-    label_2->setGeometry(QRect(60+width, 195, 56, 17));
-    label_6->setGeometry(QRect(60+width, 156, 56, 17));
-    comboBox_4->setGeometry(QRect(110+width, 150, 175, 26));
-    buttonBox_2->setGeometry(QRect(80+width, 230, 180, 32));
-    comboBox->setGeometry(QRect(110+width, 190, 175, 26));
-    menubar->setGeometry(QRect(0, 0, 360+width, 25));
+    fit_window();
   }
 
   for(i = 0; i < count; i++) {
@@ -154,7 +156,6 @@ void Ui_MainWindow::stop_playback() {
 void Ui_MainWindow::setupUi(QMainWindow *MainWindow) {
   if (MainWindow->objectName().isEmpty())
     MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-  MainWindow->resize(1000,500);
   actionQuitter = new QAction(MainWindow);
   actionQuitter->setObjectName(QString::fromUtf8("actionQuitter"));
   actionFichier = new QAction(MainWindow);
@@ -166,30 +167,23 @@ void Ui_MainWindow::setupUi(QMainWindow *MainWindow) {
   listWidget = new QListWidget(centralwidget);
   new QListWidgetItem(listWidget);
   listWidget->setObjectName(QString::fromUtf8("listWidget"));
-  listWidget->setGeometry(QRect(690, 0, 250, 130));
   listWidget->setDragDropMode(QAbstractItemView::InternalMove);
   cvwidget = new QOpenCVWidget(this);
   cvwidget->setObjectName(QString::fromUtf8("cvwidget"));
-  cvwidget->setGeometry(QRect(19, 13, 640, 480));
   label_2 = new QLabel(centralwidget);
   label_2->setObjectName(QString::fromUtf8("label_2"));
-  label_2->setGeometry(QRect(700, 195, 56, 17));
   label_6 = new QLabel(centralwidget);
   label_6->setObjectName(QString::fromUtf8("label_6"));
-  label_6->setGeometry(QRect(700, 156, 56, 17));
   comboBox_4 = new QComboBox(centralwidget);
   comboBox_4->setObjectName(QString::fromUtf8("comboBox_4"));
-  comboBox_4->setGeometry(QRect(750, 150, 175, 26));
   buttonBox_2 = new QDialogButtonBox(centralwidget);
   buttonBox_2->setObjectName(QString::fromUtf8("buttonBox_2"));
-  buttonBox_2->setGeometry(QRect(720, 230, 180, 32));
   apply_button = new QPushButton(tr("Appliquer"));
   delete_button = new QPushButton(tr("Supprimer"));
   buttonBox_2->addButton(apply_button, QDialogButtonBox::AcceptRole);
   buttonBox_2->addButton(delete_button, QDialogButtonBox::RejectRole);
   comboBox = new QComboBox(centralwidget);
   comboBox->setObjectName(QString::fromUtf8("comboBox"));
-  comboBox->setGeometry(QRect(750, 190, 175, 26));
   MainWindow->setCentralWidget(centralwidget);
   menubar = new QMenuBar(MainWindow);
   menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -208,6 +202,10 @@ void Ui_MainWindow::setupUi(QMainWindow *MainWindow) {
   menuFichier->addAction(actionQuitter);
   menuOuvrir->addAction(actionFichier);
   menuOuvrir->addAction(actionWebcam);
+
+  width = 200;
+  height = 300;
+  fit_window();
 
   retranslateUi(MainWindow);
   QObject::connect(actionQuitter, SIGNAL(triggered()), MainWindow, SLOT(close()));
