@@ -14,7 +14,7 @@ void Ui_MainWindow::select_file(){
     const char* filename_string = filename_array.data();
     source = cvCreateFileCapture(filename_string);
     assert(source);
-    timer_id = startTimer(40);
+    timer_id = startTimer(1);
   }
   return;
 }
@@ -63,7 +63,6 @@ IplImage* Ui_MainWindow::apply_filter(IplImage* image, type_filtre filtre, int t
     case BILATERAL:
       dest = cvCreateImage(cvSize(width, height), depth, channels);
       cvSmooth(image, dest, CV_BILATERAL, taille, taille, 3, 3);
-      cvReleaseImageHeader(&image);
       return dest;
   }
   return NULL;
@@ -79,6 +78,10 @@ void Ui_MainWindow::timerEvent(QTimerEvent*){
   QListWidgetItem* item_i;
   count = listWidget->count();
   IplImage* image = cvQueryFrame(source);
+  if (!image) {
+    stop_playback();
+    return;
+  }
   if (image->width != width
       || image-> height != height 
       || image->nChannels != channels
@@ -141,6 +144,11 @@ void Ui_MainWindow::delete_filter () {
   if (current_item->text() != QString("Nouveau"))
     delete current_item;
   return;
+}
+
+void Ui_MainWindow::stop_playback() {
+  killTimer(timer_id);
+  cvReleaseCapture(&source);
 }
 
 void Ui_MainWindow::setupUi(QMainWindow *MainWindow) {
@@ -244,4 +252,5 @@ void Ui_MainWindow::retranslateUi(QMainWindow *MainWindow) {
   menuFichier->setTitle(QApplication::translate("MainWindow", "Fichier", 0, QApplication::UnicodeUTF8));
   menuOuvrir->setTitle(QApplication::translate("MainWindow", "Ouvrir", 0, QApplication::UnicodeUTF8));
 }
+
 

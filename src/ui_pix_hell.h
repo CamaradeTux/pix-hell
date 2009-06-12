@@ -99,6 +99,7 @@ class Ui_MainWindow : public QMainWindow {
     void select_file();
     void apply_changes();
     void delete_filter();
+    void stop_playback();
 
 };
 
