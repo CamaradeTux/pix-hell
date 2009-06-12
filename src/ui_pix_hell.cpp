@@ -6,6 +6,7 @@ Ui_MainWindow::Ui_MainWindow(QWidget* parent) : QMainWindow(parent) {
 
 Ui::MainWindow::MainWindow(QWidget* parent) : Ui_MainWindow(parent) {}
 
+/** Permet de choisir le fichier à lire, et déclenche la lecture */
 void Ui_MainWindow::select_file(){
   QString filename = QFileDialog::getOpenFileName(this,tr("OpenImage"), "/home");
   if (filename != NULL) {
@@ -19,6 +20,7 @@ void Ui_MainWindow::select_file(){
   return;
 }
 
+/** Permet de lire depuis une webcam et déclenche la lecture */
 void Ui_MainWindow::select_camera () {
   source = cvCreateCameraCapture(0);
   assert(source);
@@ -26,6 +28,7 @@ void Ui_MainWindow::select_camera () {
   return;
 }
 
+/** Donne l'identifiant d'un filtre en fonction de son nom */
 type_filtre filter_of_id(QString name) {
   if (QString("BLUR_NS") == name)
     return BLUR_NS;
@@ -41,6 +44,7 @@ type_filtre filter_of_id(QString name) {
     return BILATERAL;
 }
 
+/** Applique un filtre à l'image, en évitant les allocations non nécessaires */
 IplImage* Ui_MainWindow::apply_filter(IplImage* image, type_filtre filtre, int taille) {
   IplImage* dest;
   switch(filtre) {
@@ -68,6 +72,7 @@ IplImage* Ui_MainWindow::apply_filter(IplImage* image, type_filtre filtre, int t
   return NULL;
 }
 
+/** Redimensionne la fenêtre en fonction des attributs width et height */
 void Ui_MainWindow::fit_window() {
   resize(360+width, 44+height);
   cvwidget->setGeometry(QRect(21, 17, 21+width, 18+height));
@@ -80,6 +85,7 @@ void Ui_MainWindow::fit_window() {
   menubar->setGeometry(QRect(0, 0, 360+width, 25));
 }
 
+/** Joue la vidéo à intervalle fixe */
 void Ui_MainWindow::timerEvent(QTimerEvent*){
   int i, count, taille;
   /* THAT SUCKS ! But I don't get how opencv manages memory */
@@ -116,6 +122,7 @@ void Ui_MainWindow::timerEvent(QTimerEvent*){
   return;
 }
 
+/** Met à jour la liste de filtre quand l'utilisateur clique sur "Appliquer" */
 void Ui_MainWindow::apply_changes () {
   QListWidgetItem* current_item = listWidget->currentItem();
   QString type, param, current_text, new_text;
@@ -136,6 +143,7 @@ void Ui_MainWindow::apply_changes () {
   return;
 }
 
+/** Supprime le filtre sélectionné par l'utilisateur */
 void Ui_MainWindow::delete_filter () {
   QListWidgetItem* current_item = listWidget->currentItem();
   if (current_item->text() != QString("Nouveau"))
@@ -143,12 +151,14 @@ void Ui_MainWindow::delete_filter () {
   return;
 }
 
+/** Arrête la lecture d'une vidéo et embraye sur Darth Vador */
 void Ui_MainWindow::stop_playback() {
   killTimer(timer_id);
   cvReleaseCapture(&source);
   may_the_force_be_with_you();
 }
 
+/** Mets à jour les infos sur l'image : width, height, channels, depth */
 void Ui_MainWindow::update_image_infos() {
   if (current_image->width != width
       || current_image-> height != height 
@@ -161,6 +171,7 @@ void Ui_MainWindow::update_image_infos() {
   }
 }
 
+/** Affiche l'image de Darth Vador */
 void Ui_MainWindow::may_the_force_be_with_you() {
   current_image = cvLoadImage(default_image_path);
   update_image_infos();
@@ -169,6 +180,7 @@ void Ui_MainWindow::may_the_force_be_with_you() {
   fit_window();
 }
 
+/** Crée l'interface : boutons, intitulés, menus... */
 void Ui_MainWindow::setupUi(QMainWindow *MainWindow) {
   if (MainWindow->objectName().isEmpty())
     MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
@@ -231,6 +243,7 @@ void Ui_MainWindow::setupUi(QMainWindow *MainWindow) {
   QMetaObject::connectSlotsByName(MainWindow);
 }
 
+/** Traduit l'interface */
 void Ui_MainWindow::retranslateUi(QMainWindow *MainWindow) {
   MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0, QApplication::UnicodeUTF8));
   actionQuitter->setText(QApplication::translate("MainWindow", "Quitter", 0, QApplication::UnicodeUTF8));
