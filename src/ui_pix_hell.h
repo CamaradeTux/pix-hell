@@ -28,6 +28,7 @@
 #include <QTextStream>
 #include <QPushButton>
 #include <QFileDialog>
+#include <QSpinBox>
 
 #include "QOpenCVWidget.h"
 #include <opencv/cv.h>
