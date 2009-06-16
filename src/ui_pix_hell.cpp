@@ -166,7 +166,7 @@ void Ui_MainWindow::update_image_infos() {
   depth = current_image->depth;
 }
 
-/** Affiche l'image de Darth Vador */
+/** Affiche l'image de Darth Vader */
 void Ui_MainWindow::may_the_force_be_with_you() {
   current_image = cvLoadImage(default_image_path);
   update_image_infos();
