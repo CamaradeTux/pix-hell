@@ -35,7 +35,6 @@
 #include <opencv/cxcore.h>
 #include <opencv/highgui.h>
 
-
 typedef enum type_filtre {
   BLUR,
   BLUR_NS,
@@ -64,7 +63,7 @@ class Ui_MainWindow : public QMainWindow {
     QAction *actionFichier;
     QAction *actionWebcam;
     QWidget *centralwidget;
-    QListWidget *listWidget;
+    QListView *listView;
     QLabel *label_2;
     QLabel *label_6;
     QComboBox *comboBox_4;
@@ -116,5 +115,52 @@ namespace Ui {
         MainWindow(QWidget* parent);
     };
 } // namespace Ui
+
+
+template <class type>
+class getter {
+  protected:
+    QAbstractSpinBox* widget;
+  public:
+    getter(type, type, type, int);
+    virtual type get_value();
+};
+
+template <>
+class getter<int> {
+  protected:
+    QSpinBox* widget;
+  public:
+    getter(int, int, int, int);
+    int get_value();
+};
+
+template <>
+class getter<double> {
+  protected:
+    QDoubleSpinBox* widget;
+  public:
+    getter(double, double, double, int);
+    double get_value();
+};
+
+template <>
+class getter<void> {};
+
+template <class type1, class type2, class type3, class type4, class type5>
+class fn {
+  protected:
+    getter<type1>* getter1();
+    getter<type2>* getter2();
+    getter<type3>* getter3();
+    getter<type4>* getter4();
+    getter<type5>* getter5();
+    void* f;
+    char* name;
+    int n;
+  public:
+    fn(char* name_, void* f_, int n_ );
+    void applique(IplImage* src, IplImage* dst);
+};
 
 #endif // PIX_HELLMN1970_H

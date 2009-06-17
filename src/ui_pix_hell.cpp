@@ -273,51 +273,6 @@ void Ui_MainWindow::retranslateUi(QMainWindow *MainWindow) {
   menuOuvrir->setTitle(QApplication::translate("MainWindow", "Ouvrir", 0, QApplication::UnicodeUTF8));
 }
 
-class int_getter {
-  protected:
-    QSpinBox* widget;
-  public:
-    int_getter(int, int, int, int);
-    int get_value() { return widget->value(); }
-    QWidget* get_widget();
-};
-
-class double_getter {
-  protected:
-    QDoubleSpinBox* widget;
-  public:
-    double_getter(double, double, double, int);
-    double get_value() { return widget->value(); }
-    QWidget* get_widget();
-};
-
-template <class type>
-class getter {
-  protected:
-    QAbstractSpinBox* widget;
-  public:
-    getter(type, type, type, int);
-    virtual type get_value();
-};
-
-template <>
-class getter<int> {
-  protected:
-    QSpinBox* widget;
-  public:
-    getter(int, int, int, int);
-    int get_value();
-};
-
-template <>
-class getter<double> {
-  protected:
-    QDoubleSpinBox* widget;
-  public:
-    getter(double, double, double, int);
-    double get_value();
-};
-
 getter<int>::getter(int min, int incr, int max, int n) {
   widget = new QSpinBox();
   widget->setMinimum(min);
@@ -334,73 +289,37 @@ getter<double>::getter(double min, double incr, double max, int n) {
   widget->setGeometry(QRect(10, 20 + 30*n, 91, 27));
 }
 
-template <class type>
-class f1 {
-  protected:
-    type param1;
-    void* f;
-    char* name;
-  public:
-    f1(char* name_, void* f_) { param1 = 0; name = name_; f = f_; };
-    void applique(IplImage* src, IplImage* dst);
-};
-
-template <class type1, class type2>
-class f2 {
-  protected:
-    type1 param1;
-    type2 param2;
-    void* f;
-    char* name;
-  public:
-    f2(char* name_, void* f_) { param1 = 0; param2 = 0; f = f_; };
-    void applique(IplImage* src, IplImage* dst);
-};
-
-template <class type1, class type2, class type3>
-class f3 {
-  protected:
-    type1 param1;
-    type2 param2;
-    type3 param3;
-    void* f;
-    char* name;
-  public:
-    f3(char* name_, void* f_) { param1 = 0; param2 = 0; param3 = 0; f = f_; };
-    void applique(IplImage* src, IplImage* dst);
-};
-
-template <class type1, class type2, class type3, class type4>
-class f4 {
-  protected:
-    type1 param1;
-    type2 param2;
-    type3 param3;
-    type4 param4;
-    void* f;
-    char* name;
-  public:
-    f4(char* name_, void* f_) { param1 = 0; param2 = 0; param3 = 0; param4 = 0; f = f_; };
-    void applique(IplImage* src, IplImage* dst);
-};
-
-template <class type>
-void f1<type>::applique(IplImage* src, IplImage* dst) {
-  f(src, dst, param1);
+template <class type1, class type2, class type3, class type4, class type5>
+void fn<type1, type2, type3, type4, type5>::applique(IplImage* src, IplImage* dst) {
+  switch(n) {
+    case 1:
+      f(src, dst, getter1());
+      break;
+    case 2:
+      f(src, dst, getter1(), getter2());
+      break;
+    case 3:
+      f(src, dst, getter1(), getter2(), getter3());
+      break;
+    case 4:
+      f(src, dst, getter1(), getter2(), getter3(), getter4());
+      break;
+    case 5:
+      f(src, dst, getter1(), getter2(), getter3(), getter4(), getter5());
+      break;
+  }
+  return;
 }
 
-template <class type1, class type2>
-void f2<type1, type2>::applique(IplImage* src, IplImage* dst) {
-  f(src, dst, param1, param2);
-}
-
-template <class type1, class type2, class type3>
-void f3<type1, type2, type3>::applique(IplImage* src, IplImage* dst) {
-  f(src, dst, param1, param2, param3);
-}
-
-template <class type1, class type2, class type3, class type4>
-void f4<type1, type2, type3, type4>::applique(IplImage* src, IplImage* dst) {
-  f(src, dst, param1, param2, param3, param4);
+template <class type1, class type2, class type3, class type4, class type5>
+fn<type1, type2, type3, type4, type5>::fn(char* name_, void* f_, int n_) {
+  name = name_;
+  f = f_;
+  n = n_;
+  getter1() = new getter<type1>;
+  getter2() = new getter<type2>;
+  getter3() = new getter<type3>;
+  getter4() = new getter<type4>;
+  getter5() = new getter<type5>;
 }
 
