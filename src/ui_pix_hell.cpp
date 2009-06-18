@@ -266,7 +266,7 @@ double getter<double>::get() {
 }
 
 template <class type1, class type2, class type3, class type4, class type5>
-void fn<type1, type2, type3, type4, type5>::applique(IplImage* src, IplImage* dst) {
+void fn<type1, type2, type3, type4, type5>::applique(const IplImage* src, IplImage* dst) {
   switch(n) {
     case 1:
       f1(src, dst, getter1->get());
@@ -351,23 +351,12 @@ QVariant FilterListModel::data(const QModelIndex &index, int role) const {
     return QVariant();
 }
 
-
-void g(void*, void*, int a, int b, int c) {
-  printf("%d ; %d ; %d\n", a, b, c);
-  return;
-}
-
-void i(void*, void*, int a, int b) {
-  printf("%d ; %d\n", a, b);
-  return;
+void t(const CvArr* src, CvArr* dst, int smoothtype, int param1) {
+  return cvSmooth(src, dst, smoothtype, param1, param1, 0, 0);
 }
 
 void a() {
-  void* h = (void*) &g;
-  void* j = (void*) &i;
-  fn<int,int,int,int,int>* b = new fn<int,int,int,int,int>("a", &h, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-  fn<int,int,int,int,int>* c = new fn<int,int,int,int,int>("a", &j, 0, 0, 0, 0, 0, 0);
-  b->applique(NULL, NULL);
+  fn<int,int,int,int,int>* c = new fn<int,int,int,int,int>("a", &t, 0, 0, 0, 0, 0, 0);
   c->applique(NULL, NULL);
 }
 

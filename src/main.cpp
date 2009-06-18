@@ -11,7 +11,6 @@
 int main(int argc, char **argv) {
   int retval;
   QApplication app(argc, argv);
-  a();
   Ui::MainWindow* window = new Ui::MainWindow(0);
   window->setupUi(window);
   window->setWindowTitle("OpenCV --> QtImage");

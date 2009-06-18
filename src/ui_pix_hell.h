@@ -146,11 +146,11 @@ class fn {
     getter<type3>* getter3;
     getter<type4>* getter4;
     getter<type5>* getter5;
-    void (*f1)(IplImage*, IplImage*, type1);
-    void (*f2)(IplImage*, IplImage*, type1, type2);
-    void (*f3)(IplImage*, IplImage*, type1, type2, type3);
-    void (*f4)(IplImage*, IplImage*, type1, type2, type3, type4);
-    void (*f5)(IplImage*, IplImage*, type1, type2, type3, type4, type5);
+    void (*f1)(const IplImage*, IplImage*, type1);
+    void (*f2)(const IplImage*, IplImage*, type1, type2);
+    void (*f3)(const IplImage*, IplImage*, type1, type2, type3);
+    void (*f4)(const IplImage*, IplImage*, type1, type2, type3, type4);
+    void (*f5)(const IplImage*, IplImage*, type1, type2, type3, type4, type5);
     char* name;
     int n;
   public:
@@ -159,7 +159,7 @@ class fn {
     fn(char* name_, void* f_, type1, type1, type1, type2, type2, type2, type3, type3, type3);
     fn(char* name_, void* f_, type1, type1, type1, type2, type2, type2, type3, type3, type3, type4, type4, type4);
     fn(char* name_, void* f_, type1, type1, type1, type2, type2, type2, type3, type3, type3, type4, type4, type4, type5, type5, type5);
-    void applique(IplImage* src, IplImage* dst);
+    void applique(const IplImage* src, IplImage* dst);
 };
 
 void a();
