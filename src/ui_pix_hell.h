@@ -28,6 +28,7 @@
 #include <QTextStream>
 #include <QPushButton>
 #include <QFileDialog>
+#include <QAbstractListModel>
 #include <QSpinBox>
 
 #include "QOpenCVWidget.h"
@@ -35,26 +36,15 @@
 #include <opencv/cxcore.h>
 #include <opencv/highgui.h>
 
-typedef enum type_filtre {
-  BLUR,
-  BLUR_NS,
-  GAUSSIAN_TROIS,
-  GAUSSIAN_CINQ,
-  MEDIAN,
-  BILATERAL
-} type_filtre;
-
-typedef enum taille {
-  TROIS = 3,
-  CINQ = 5,
-  SEPT = 7,
-  NEUF = 9
-} taille_;
-
-typedef struct filtre {
-  type_filtre type_du_filtre;
-  taille_ taille;
-} filtre;
+class FilterListModel : public QAbstractListModel {
+  Q_OBJECT
+  public:
+    FilterListModel(QObject *parent = 0) : QAbstractListModel(parent) {};
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    QVariant data(const QModelIndex &index, int role) const;
+  private:
+    QStringList filters;
+};
 
 class Ui_MainWindow : public QMainWindow {
   Q_OBJECT
@@ -63,7 +53,9 @@ class Ui_MainWindow : public QMainWindow {
     QAction *actionFichier;
     QAction *actionWebcam;
     QWidget *centralwidget;
-    QListView *listView;
+    QAbstractListModel* filter_list_model;
+    QListView* filter_list;
+    QItemSelectionModel* filter_list_selection_model;
     QLabel *label_2;
     QLabel *label_6;
     QComboBox *comboBox_4;
@@ -92,7 +84,6 @@ class Ui_MainWindow : public QMainWindow {
     Ui_MainWindow(QWidget* parent);
 
     void timerEvent(QTimerEvent*);
-    IplImage* apply_filter(IplImage*, type_filtre, int);
 
     int timer_id;
     int width;
@@ -132,7 +123,7 @@ class getter<int> {
     QSpinBox* widget;
   public:
     getter(int, int, int, int);
-    int get_value();
+    int get();
 };
 
 template <>
@@ -141,26 +132,35 @@ class getter<double> {
     QDoubleSpinBox* widget;
   public:
     getter(double, double, double, int);
-    double get_value();
+    double get();
 };
 
 template <>
-class getter<void> {};
+class getter<char> {};
 
 template <class type1, class type2, class type3, class type4, class type5>
 class fn {
   protected:
-    getter<type1>* getter1();
-    getter<type2>* getter2();
-    getter<type3>* getter3();
-    getter<type4>* getter4();
-    getter<type5>* getter5();
-    void* f;
+    getter<type1>* getter1;
+    getter<type2>* getter2;
+    getter<type3>* getter3;
+    getter<type4>* getter4;
+    getter<type5>* getter5;
+    void (*f1)(IplImage*, IplImage*, type1);
+    void (*f2)(IplImage*, IplImage*, type1, type2);
+    void (*f3)(IplImage*, IplImage*, type1, type2, type3);
+    void (*f4)(IplImage*, IplImage*, type1, type2, type3, type4);
+    void (*f5)(IplImage*, IplImage*, type1, type2, type3, type4, type5);
     char* name;
     int n;
   public:
-    fn(char* name_, void* f_, int n_ );
+    fn(char* name_, void* f_, type1, type1, type1);
+    fn(char* name_, void* f_, type1, type1, type1, type2, type2, type2);
+    fn(char* name_, void* f_, type1, type1, type1, type2, type2, type2, type3, type3, type3);
+    fn(char* name_, void* f_, type1, type1, type1, type2, type2, type2, type3, type3, type3, type4, type4, type4);
+    fn(char* name_, void* f_, type1, type1, type1, type2, type2, type2, type3, type3, type3, type4, type4, type4, type5, type5, type5);
     void applique(IplImage* src, IplImage* dst);
 };
 
+void a();
 #endif // PIX_HELLMN1970_H

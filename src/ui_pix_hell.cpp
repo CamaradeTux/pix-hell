@@ -28,23 +28,8 @@ void Ui_MainWindow::select_camera () {
   return;
 }
 
-/** Donne l'identifiant d'un filtre en fonction de son nom */
-type_filtre filter_of_id(QString name) {
-  if (QString("BLUR_NS") == name)
-    return BLUR_NS;
-  if (QString("BLUR") == name)
-    return BLUR;
-  if (QString("GAUSSIAN_TROIS") == name)
-    return GAUSSIAN_TROIS;
-  if (QString("GAUSSIAN_CINQ") == name)
-    return GAUSSIAN_CINQ;
-  if (QString("MEDIAN") == name)
-    return MEDIAN;
-  if (QString("BILATERAL") == name)
-    return BILATERAL;
-}
-
 /** Applique un filtre à l'image, en évitant les allocations non nécessaires */
+/*
 IplImage* Ui_MainWindow::apply_filter(IplImage* image, type_filtre filtre, int taille) {
   IplImage* dest;
   switch(filtre) {
@@ -71,12 +56,12 @@ IplImage* Ui_MainWindow::apply_filter(IplImage* image, type_filtre filtre, int t
   }
   return NULL;
 }
-
+*/
 /** Redimensionne la fenêtre en fonction des attributs width et height */
 void Ui_MainWindow::fit_window() {
   resize(360+width, 44+height);
   cvwidget->setGeometry(QRect(21, 17, 21+width, 18+height));
-  listWidget->setGeometry(QRect(50+width, 0, 250, 130));
+  filter_list->setGeometry(QRect(50+width, 0, 250, 130));
   label_2->setGeometry(QRect(60+width, 195, 56, 17));
   label_6->setGeometry(QRect(60+width, 156, 56, 17));
   comboBox_4->setGeometry(QRect(110+width, 150, 175, 26));
@@ -87,14 +72,10 @@ void Ui_MainWindow::fit_window() {
 
 /** Joue la vidéo à intervalle fixe */
 void Ui_MainWindow::timerEvent(QTimerEvent*){
-  int i, count, taille;
   /* THAT SUCKS ! But I don't get how opencv manages memory */
   bool should_free = false;
   /* END OF MAJOR SUCKINESS */
-  type_filtre filter;
   QString type, param;
-  QListWidgetItem* item_i;
-  count = listWidget->count();
   current_image = cvQueryFrame(source);
   if (!current_image) {
     stop_playback();
@@ -104,18 +85,15 @@ void Ui_MainWindow::timerEvent(QTimerEvent*){
   update_image_infos();
   fit_window();
 
-  for(i = 0; i < count; i++) {
-    item_i = listWidget->item(i);
-    if (item_i->text() != "Nouveau") {
-      type = item_i->text().section(" ", 0, 0);
-      filter = filter_of_id(type);
-      if (MEDIAN == filter || BILATERAL == filter)
-        should_free = true;
-      param = item_i->text().section(" ", 1, 1);
-      taille = param.at(0).digitValue();
-      current_image = apply_filter(current_image, filter_of_id(type), taille);
-    }
+  /* FIXME */
+  QModelIndex index;
+  QModelIndexList items = filter_list_selection_model->selectedIndexes();
+
+  foreach (index, items) {
+    QString text = QString("a");
+    filter_list_model->setData(index, text);
   }
+
   cvwidget->putImage(current_image);
   if (should_free)
     cvReleaseImage(&current_image);
@@ -124,30 +102,13 @@ void Ui_MainWindow::timerEvent(QTimerEvent*){
 
 /** Met à jour la liste de filtre quand l'utilisateur clique sur "Appliquer" */
 void Ui_MainWindow::apply_changes () {
-  QListWidgetItem* current_item = listWidget->currentItem();
-  QString type, param, current_text, new_text;
-  current_text = current_item->text();
-  type = comboBox_4->currentText();
-  param = comboBox->currentText();
-
-  if (current_text == "Nouveau") {
-    QListWidgetItem* new_item = new QListWidgetItem("Nouveau");
-    listWidget->addItem(new_item);
-    listWidget->setCurrentItem(new_item);
-  }
-  
-  QTextStream(&new_text) << type << " " << param;
-
-  current_item->setText(new_text);
-
+  QModelIndex selected = filter_list_selection_model->selectedIndexes()[0];
   return;
 }
 
 /** Supprime le filtre sélectionné par l'utilisateur */
 void Ui_MainWindow::delete_filter () {
-  QListWidgetItem* current_item = listWidget->currentItem();
-  if (current_item->text() != QString("Nouveau"))
-    delete current_item;
+  filter_list_selection_model->selectedIndexes()[0].~QModelIndex();
   return;
 }
 
@@ -187,10 +148,17 @@ void Ui_MainWindow::setupUi(QMainWindow *MainWindow) {
   actionWebcam->setObjectName(QString::fromUtf8("actionWebcam"));
   centralwidget = new QWidget(MainWindow);
   centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-  listWidget = new QListWidget(centralwidget);
+  filter_list_model = new FilterListModel(centralwidget);
+  filter_list = new QListView;
+  filter_list->setModel(filter_list_model);
+  QListWidget* t = new QListWidget(0);
+  filter_list_selection_model = t->selectionModel();
+  delete t;
+  /*
   new QListWidgetItem(listWidget);
   listWidget->setObjectName(QString::fromUtf8("listWidget"));
-  listWidget->setDragDropMode(QAbstractItemView::InternalMove);
+  listWidget->setDragDropMode(QAbstractItemView::InternalMove); 
+  */
   cvwidget = new QOpenCVWidget(this);
   cvwidget->setObjectName(QString::fromUtf8("cvwidget"));
   label_2 = new QLabel(centralwidget);
@@ -245,12 +213,12 @@ void Ui_MainWindow::retranslateUi(QMainWindow *MainWindow) {
   actionFichier->setText(QApplication::translate("MainWindow", "Fichier", 0, QApplication::UnicodeUTF8));
   actionWebcam->setText(QApplication::translate("MainWindow", "Webcam", 0, QApplication::UnicodeUTF8));
 
-  const bool __sortingEnabled = listWidget->isSortingEnabled();
-  listWidget->item(0)->setText(QApplication::translate("MainWindow", "Nouveau", 0, QApplication::UnicodeUTF8));
+  /* const bool __sortingEnabled = listWidget->isSortingEnabled(); */
+  /* listWidget->item(0)->setText(QApplication::translate("MainWindow", "Nouveau", 0, QApplication::UnicodeUTF8));
   listWidget->setCurrentItem(listWidget->item(0));
   listWidget->setSortingEnabled(false);
 
-  listWidget->setSortingEnabled(__sortingEnabled);
+  listWidget->setSortingEnabled(__sortingEnabled); */
   label_2->setText(QApplication::translate("MainWindow", "Taille", 0, QApplication::UnicodeUTF8));
   label_6->setText(QApplication::translate("MainWindow", "Type", 0, QApplication::UnicodeUTF8));
   comboBox_4->clear();
@@ -281,6 +249,10 @@ getter<int>::getter(int min, int incr, int max, int n) {
   widget->setGeometry(QRect(10, 20 + 30*n, 91, 27));
 }
 
+int getter<int>::get() {
+  return widget->value();
+}
+
 getter<double>::getter(double min, double incr, double max, int n) {
   widget = new QDoubleSpinBox();
   widget->setMinimum(min);
@@ -289,37 +261,113 @@ getter<double>::getter(double min, double incr, double max, int n) {
   widget->setGeometry(QRect(10, 20 + 30*n, 91, 27));
 }
 
+double getter<double>::get() {
+  return widget->value();
+}
+
 template <class type1, class type2, class type3, class type4, class type5>
 void fn<type1, type2, type3, type4, type5>::applique(IplImage* src, IplImage* dst) {
   switch(n) {
     case 1:
-      f(src, dst, getter1());
+      f1(src, dst, getter1->get());
       break;
     case 2:
-      f(src, dst, getter1(), getter2());
+      f2(src, dst, getter1->get(), getter2->get());
       break;
     case 3:
-      f(src, dst, getter1(), getter2(), getter3());
+      f3(src, dst, getter1->get(), getter2->get(), getter3->get());
       break;
     case 4:
-      f(src, dst, getter1(), getter2(), getter3(), getter4());
+      f4(src, dst, getter1->get(), getter2->get(), getter3->get(), getter4->get());
       break;
     case 5:
-      f(src, dst, getter1(), getter2(), getter3(), getter4(), getter5());
+      f5(src, dst, getter1->get(), getter2->get(), getter3->get(), getter4->get(), getter5->get());
       break;
   }
   return;
 }
 
 template <class type1, class type2, class type3, class type4, class type5>
-fn<type1, type2, type3, type4, type5>::fn(char* name_, void* f_, int n_) {
+fn<type1, type2, type3, type4, type5>::fn(char* name_, void* f_, type1 min1, type1 step1, type1 max1) {
   name = name_;
-  f = f_;
-  n = n_;
-  getter1() = new getter<type1>;
-  getter2() = new getter<type2>;
-  getter3() = new getter<type3>;
-  getter4() = new getter<type4>;
-  getter5() = new getter<type5>;
+  f1 = (void (*)(IplImage*, IplImage*, type1))f_;
+  n = 1;
+  getter1 = new getter<type1>(min1, step1, max1, 1);
+}
+
+template <class type1, class type2, class type3, class type4, class type5>
+fn<type1, type2, type3, type4, type5>::fn(char* name_, void* f_, type1 min1, type1 step1, type1 max1, type2 min2, type2 step2, type2 max2) {
+  name = name_;
+  f2 = (void (*)(IplImage*, IplImage*, type1, type2))f_;
+  n = 2;
+  getter1 = new getter<type1>(min1, step1, max1, 1);
+  getter2 = new getter<type2>(min2, step2, max2, 2);
+}
+
+template <class type1, class type2, class type3, class type4, class type5>
+fn<type1, type2, type3, type4, type5>::fn(char* name_, void* f_, type1 min1, type1 step1, type1 max1, type2 min2, type2 step2, type2 max2, type3 min3, type3 step3, type3 max3) {
+  name = name_;
+  f3 = (void (*)(IplImage*, IplImage*, type1, type2, type3))f_;
+  n = 3;
+  getter1 = new getter<type1>(min1, step1, max1, 1);
+  getter2 = new getter<type2>(min2, step2, max2, 2);
+  getter3 = new getter<type3>(min3, step3, max3, 3);
+}
+
+template <class type1, class type2, class type3, class type4, class type5>
+fn<type1, type2, type3, type4, type5>::fn(char* name_, void* f_, type1 min1, type1 step1, type1 max1, type2 min2, type2 step2, type2 max2, type3 min3, type3 step3, type3 max3, type4 min4, type4 step4, type4 max4) {
+  name = name_;
+  f4 = (void (*)(IplImage*, IplImage*, type1, type2, type3, type4))f_;
+  n = 4;
+  getter1 = new getter<type1>(min1, step1, max1, 1);
+  getter2 = new getter<type2>(min2, step2, max2, 2);
+  getter3 = new getter<type3>(min3, step3, max3, 3);
+  getter4 = new getter<type4>(min4, step4, max4, 4);
+}
+template <class type1, class type2, class type3, class type4, class type5>
+fn<type1, type2, type3, type4, type5>::fn(char* name_, void* f_, type1 min1, type1 step1, type1 max1, type2 min2, type2 step2, type2 max2, type3 min3, type3 step3, type3 max3, type4 min4, type4 step4, type4 max4, type5 min5, type5 step5, type5 max5) {
+  name = name_;
+  f5 = (void (*)(IplImage*, IplImage*, type1, type2, type3, type4, type5))f_;
+  n = 5;
+  getter1 = new getter<type1>(min1, step1, max1, 1);
+  getter2 = new getter<type2>(min2, step2, max2, 2);
+  getter3 = new getter<type3>(min3, step3, max3, 3);
+  getter4 = new getter<type4>(min4, step4, max4, 4);
+  getter5 = new getter<type5>(min5, step5, max5, 5);
+}
+
+int FilterListModel::rowCount(const QModelIndex &parent) const {
+  return filters.count();
+}
+
+QVariant FilterListModel::data(const QModelIndex &index, int role) const {
+  if (!index.isValid())
+    return QVariant();
+  if (index.row() >= filters.size())
+    return QVariant();
+  if (role == Qt::DisplayRole)
+    return filters.at(index.row());
+  else
+    return QVariant();
+}
+
+
+void g(void*, void*, int a, int b, int c) {
+  printf("%d ; %d ; %d\n", a, b, c);
+  return;
+}
+
+void i(void*, void*, int a, int b) {
+  printf("%d ; %d\n", a, b);
+  return;
+}
+
+void a() {
+  void* h = (void*) &g;
+  void* j = (void*) &i;
+  fn<int,int,int,int,int>* b = new fn<int,int,int,int,int>("a", &h, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  fn<int,int,int,int,int>* c = new fn<int,int,int,int,int>("a", &j, 0, 0, 0, 0, 0, 0);
+  b->applique(NULL, NULL);
+  c->applique(NULL, NULL);
 }
 
